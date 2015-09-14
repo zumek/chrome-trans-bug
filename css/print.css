@@ -1,0 +1,9 @@
+@media print {
+  header, button, footer, .prompt, .bg-img, a, .hide-print {
+    display: none !important;
+  }
+
+  .page-body {
+    background-color: #FFF;
+  }
+}

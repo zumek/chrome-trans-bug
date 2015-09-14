@@ -1,0 +1,277 @@
+<!doctype html>
+<html xmlns:ng="http://angularjs.org" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Transition bug</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/mod1.css" media="screen"/>
+    <link rel="stylesheet" href="css/print.css" media="print"/>
+
+  </head>
+  <body data-ng-app="ntmkApp" data-ng-controller="MainCtrl">
+    <div class="wrap container">
+        <a href="#stage" data-dr-focus-target=".stage" class="skip-link">Skip to content</a>
+        <a href="#nav" data-dr-focus-target="footer.main" class="skip-link">Skip to page navigation</a>
+        <header>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <img src="" alt="" width="67" height="63" style="background-color: #000;">
+                        <span class="vbar"></span>
+                        <h1><span >Lorem ipsum dolor.</span> 
+                            <small class="module"><span >Lorem ipsum dolor.</span><span ng-show="groupData.desc"></span></small>
+                            <small class="topic" data-ng-show="groupData.subgroups"><span >Lorem ipsum.</span></small>
+                        </h1>
+                        <div role="menu">
+                            <ul class="list-unstyled list-inline">
+                                <li><a href="" ng-click="openDialog('mainMenu')" ng-class="{active: dialogId=='mainMenu'}" aria-selected="{{dialogId!=null}}" title="Menu" role="menuitem"><i class="icon" ></i><span>Menu</span></a></li>
+                                <li><a href="" ng-click="openDialog('resources')" ng-class="{active: dialogId=='resources'}" aria-selected="{{dialogId!=null}}" title="Resource" role="menuitem"><i class="icon"></i><span>Resources</span></a></li>
+                                <li><a href="" ng-click="openDialog('help')" ng-class="{active: dialogId=='help'}" aria-selected="{{dialogId!=null}}" title="Help" role="menuitem"><i class="icon"></i><span>Help</span></a></li>
+                                <li><a href="" ng-click="exitModule()" title="Save & Exit" role="menuitem"><i class="icon"></i><span>Save &amp; Exit</span></a></li>
+                            </ul>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="stage-wrap no-anim" ng-hide="dialogId">
+            <section id="stage" data-ng-view="" class="page-{{pageId}} stage no-focus-highlight" role="main" aria-atomic="false" tabIndex="0">
+                
+            </section>
+            <div class="desktop-break-test"></div>
+        </div>
+        <footer  id="nav" class="main no-anim" tabIndex="0" ng-hide="dialogId">
+            <nav class="backnext" aria-label="page navigation">
+                <p class="pages">PAGE <span ng-bind="pageData.pageNumber"></span> OF <span ng-bind="subgroupData.totalPages"></span></p>
+                <a id="btnBack" href="#/{{pageData.prev}}" class="back" dr-disable="!pageData.prev" title="go to previous page"><i class="icon"></i><span class="lbl">Back</span></a>
+                <a id="btnNext" href="#/{{pageData.next}}" class="next" dr-disable="!pageData.next || !pageData.completed" title="go to next page"><span class="lbl">Next</span><i class="icon"></i></a>
+            </nav>
+            <style type="text/css">
+
+            </style>
+
+            <!-- topic menu -->
+            <nav class="topic" aria-lable="topic navigation" ng-controller="TopicMenuCtrl" ng-class="{active: isOpen}" ng-show="pageData.sub">
+                <button class="btn btn-default toggle" aria-label="toggle topic menu" ng-click="toggleMenu()"><i class="glyphicon glyphicon-chevron-up"></i></button>
+                <p class="prompt">Select a topic from the list.</p>
+                <ol class="list-unstyled">
+                    <li ng-repeat="$item in groupData.subgroups"><a href="{{$item.active || $first ? '#'+$item.linkTo : ''}}" tabindex="{{isOpen? 0 : -1}}" ng-class="{active: pageData.sub == $item.id}" ng-click="toggleMenu()" ng-disabled="!$item.active && !$first">Lorem ipsum dolor.</a></li>
+                </ol>
+            </nav>
+        </footer>
+        <div id="dialog-container" class="{{dialogId}}" ng-include="dialogId" onload="updateDialogFocus()"></div>
+    </div>
+
+    <script type="text/ng-template" id="mainMenu">
+        <section id="menu-dialog" class="dialog" ng-controller="MenuCtrl">
+            <header class="row">
+                <div class="col-xs-12">
+                    <h2>MENU</h2>
+                </div>
+            </header>
+            <article>
+                <nav class="col-xs-12 col-md-8 center-block">
+                
+                    <ul class="row">
+                        <li class="col-xs-3 thumbnail text-center ng-class:{disabled: !$first && !menuItems[$index-1].state} " ng-repeat="$item in menuItems">
+                            <a ng-href="{{$item.active? '#'+ $item.linkTo : ''}}" ng-click="closeDialog()" class="btn">
+                                <img class="tick" src="assets/ui/menu_tick.png" alt="completed" ng-show="$item.state">
+                                <img class="lock" src="assets/ui/menu_lock.png" alt="module inactive" ng-show="!$item.active">
+                                <div class="caption">
+                                    <h3 >Lorem ipsum</h3>
+                                    <p >Lorem ipsum</p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                </nav>
+                
+            </article>
+            <footer>
+                    <button class="btn round-primary btn-close" ng-click="closeDialog()" title="Close menu"><i class="glyphicon glyphicon-remove"></i></button>
+            </footer>
+        </section>
+    </script>
+
+    <script type="text/ng-template" id="resources">
+        <section id="resources-dialog" class="dialog dialog-default" ng-controller="ResourceCtrl">
+            <header class="row">
+                <div class="col-xs-12">
+                    <h2>RESOURCES</h2>
+                </div>
+            </header>
+            <article class="{{lastResource}}">
+                <div class="resource-list" ng-hide="resourceId">
+                    <p class="prompt text-center"><strong>Select from the links below.</strong></p>
+                    <ul class="list-group">
+                        <li class="list-group-item"><a class="res1" ng-click="openResource('res1')" href="">Lorem ipsum dolor sit amet, consectetur</a></li>
+                        <li class="list-group-item"><a class="res2" ng-click="openResource('res2')" href="">Lorem ipsum dolor sit.</a></li>
+                        
+                    </ul>
+                    
+                </div>
+                <div id="resource-wrap" tabIndex="0">
+                    <div ng-include="resourceId" onload="setFocus();"></div>
+                    
+                </div>
+
+            </article>
+            <footer>
+                    <button ng-show="resourceId" ng-click="resourceId=null" title="Back to resource list" dr-focus-target="a.{{lastResource}}" class="btn btn-primary">Back</button>
+                    <button class="btn round-primary btn-close" ng-click="closeDialog()" title="Close resources"><i class="glyphicon glyphicon-remove"></i></button>
+            </footer>
+        </section>
+    </script>
+
+
+    <script type="text/ng-template" id="help">
+        <section id="help-dialog" class="dialog dialog-default" ng-controller="ResourceCtrl">
+            <header class="row">
+                <div class="col-xs-12">
+                    <h2>HELP</h2>
+                </div>
+            </header>
+            <article class="row">
+                <section>
+                    <header class="sr-only">Interface header</header>
+                    <article class="help-header">
+                        <img src="assets/ui/help-header.png" alt="interface header elements" width="397" height="24">
+                        <ul aria-description="Interface header element descriptions">
+                            <li class="item1 arrow-bottom">The Menu button displays the course menu.</li>
+                            <li class="item2 arrow-top">The Help button will assist you to navigate through the course.</li>
+                            <li class="item3 arrow-top">The Save &amp; Exit button closes the course and saves your progress.</li>
+                            <li class="item4 arrow-bottom">The Resources enables you to access additional information relevant to the course.</li>
+                           
+     
+                        </ul>
+                        
+                    </article>
+                </section>
+
+                <section>
+                    <header class="sr-only">Audio controls</header>
+                    <article class="help-audio">
+                        <img src="assets/ui/help-audio.png" alt="Audio control buttons" width="265" height="35">
+                        <ul aria-description="Interface header element descriptions">
+                            <li class="item1 arrow-bottom">The Play/Pause button toggles between playing and pausing the audio.</li>
+                            <li class="item2 arrow-top">Select the Replay button to restart the audio.</li>
+                            <li class="item3 arrow-bottom">The Transcript button provides the text of the audio transcript.</li>
+     
+                        </ul>
+                        
+                    </article>
+                </section>
+                
+                <section>
+                    <header class="sr-only">Interface footer</header>
+                    <article class="help-footer">
+                        <img src="assets/ui/help-footer.png" alt="interface footer elements" width="452" height="70">
+                        <ul arial-description="interface footer element descriptions">
+                            <li class="item1 arrow-bottom">The Back button takes you back a screen.</li>
+                            <li class="item2 arrow-bottom">The Next button moves to the next screen.</li>
+                            <li class="item3 arrow-top">The number of pages are shown for the current topic. Select the arrow to display the Topic menu.</li>
+                        </ul>
+                    </article>
+                </section>
+                
+            </article>
+            <footer>
+                    <button class="btn round-primary btn-close" ng-click="closeDialog()" title="Close help"><i class="glyphicon glyphicon-remove"></i></button>
+            </footer>
+        </section>
+    </script>
+
+
+
+
+
+    <script type="text/ng-template" id="/page/2f">
+        <section class="dr-audio-bar">
+        </section>
+        <div class="page"></div>
+        <div class="dr-next-prompt"></div>            
+        
+    </script>
+
+
+
+
+    <script type="text/ng-template" id="/resource/res1">
+        <h3>Lorem ipsum dolor sit amet.</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, excepturi?</p>
+        <ul>
+            <li>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, necessitatibus.</p>
+            </li>
+            <li>
+                <p>Ipsam officia, cum magnam nesciunt neque mollitia qui laudantium expedita!</p>
+            </li>
+            <li>
+                <p>Earum explicabo, cum, commodi dolorem dicta natus error voluptates eius.</p>
+            </li>
+            <li>
+                <p>Cumque voluptates facere quidem dolorum vitae consequatur doloribus, ducimus quae.</p>
+            </li>
+        </ul>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto nam quis ea corporis quod quo!</p>
+
+    </script>
+
+    <script type="text/ng-template" id="/resource/res2">
+        <h3>Lorem ipsum dolor sit amet.</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, excepturi?</p>
+        <ul>
+            <li>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, necessitatibus.</p>
+            </li>
+            <li>
+                <p>Ipsam officia, cum magnam nesciunt neque mollitia qui laudantium expedita!</p>
+            </li>
+            <li>
+                <p>Earum explicabo, cum, commodi dolorem dicta natus error voluptates eius.</p>
+            </li>
+            <li>
+                <p>Cumque voluptates facere quidem dolorum vitae consequatur doloribus, ducimus quae.</p>
+            </li>
+        </ul>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto nam quis ea corporis quod quo!</p>
+
+    </script>
+    
+
+
+
+
+    <script src="scripts/plugins.js"></script>
+
+
+    <script src="scripts/scripts.js"></script>
+
+    <script src="scripts/modules.js"></script>
+
+    <script src="scripts/module1.js"></script>
+
+        <script>
+    var out = {};
+    out.width = window.screen.width;
+    out.height = window.screen.height;
+
+    out.stageW = $('.stage').width();
+    out.stageH = $('.stage').height();
+
+    out.bodyW = $('body').width();
+    out.bodyH = $('body').height();
+
+    // alert(JSON.stringify(out));
+    </script>
+    </body>
+</html>
