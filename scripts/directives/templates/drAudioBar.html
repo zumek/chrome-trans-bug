@@ -1,0 +1,29 @@
+<section class="audio-bar">
+    <div class="container-fluid bar">
+        <div class="row">
+            <div class="col-sm-5 col-md-6">
+                <!-- prompt -->
+                <div class="prompt"><strong class="tpl-prompt">Select PLAY to hear Joanne.</strong></div>
+                <!--  -->
+            </div>
+            <div class="col-sm-7 col-md-6 tpl-audio" ng-hide="!hasAudio">
+                <!-- audio -->
+                <!--  -->
+            </div>
+        </div>
+    </div>
+    <!-- transcript -->
+    <div id="{{transId}}" class="container-fluid {{transId}} transcript tpl-transcript">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class=" ">
+                    <article class="trans-body"></article>
+                    <div class="controls">
+                        <button class="btnClose btn round-primary" title="close transcript" ng-click="transToggle = !transToggle"><span class="sr-only">Close</span><i class="glyphicon glyphicon-remove"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  -->
+</section>
